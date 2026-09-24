@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom"
 import Login from "../pages/Login"
 import ForgotPassword from "../pages/ForgotPassword"
 import Register from "../pages/Register"
-
+import HRCopilot from "../pages/HRCopilot"
 
 function AppRoutes() {
   return (
@@ -22,6 +22,11 @@ function AppRoutes() {
       <Route
         path="/forgot-password"
         element={<ForgotPassword />}
+      />
+
+      <Route
+        path="/hr-copilot"
+        element={<HRCopilot />}
       />
 
     </Routes>
