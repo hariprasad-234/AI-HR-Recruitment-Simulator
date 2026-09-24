@@ -1,10 +1,10 @@
-# AI HR Resume Simulator 🤖📄
+# AI HR Recruitment Simulator 🤖📄
 
 An AI-powered hiring platform designed to transform recruitment into a smarter, faster, and more data-driven process. This project helps HR teams review resumes, evaluate candidates, match them to job roles, and interact with an intelligent recruiter assistant.
 
 ## 🌟 Overview
 
-AI HR Resume Simulator brings together resume analysis, candidate evaluation, and recruiter assistance in a single modern platform. It helps hiring teams make informed decisions with less manual effort and better speed.
+AI HR Recruitment Simulator brings together resume analysis, candidate evaluation, and recruiter assistance in a single modern platform. It helps hiring teams make informed decisions with less manual effort and better speed.
 
 ## ✨ Key Features
 
