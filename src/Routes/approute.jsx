@@ -4,6 +4,7 @@ import Login from "../pages/Login"
 import ForgotPassword from "../pages/ForgotPassword"
 import Register from "../pages/Register"
 import HRCopilot from "../pages/HRCopilot"
+import Interview from "../pages/Interview"
 
 function AppRoutes() {
   return (
@@ -27,6 +28,11 @@ function AppRoutes() {
       <Route
         path="/hr-copilot"
         element={<HRCopilot />}
+      />
+
+      <Route
+        path="/interview/:candidateId"
+        element={<Interview />}
       />
 
     </Routes>
