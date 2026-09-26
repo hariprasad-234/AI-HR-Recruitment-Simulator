@@ -5,6 +5,9 @@ import ForgotPassword from "../pages/ForgotPassword"
 import Register from "../pages/Register"
 import HRCopilot from "../pages/HRCopilot"
 import Interview from "../pages/Interview"
+import JobMatching from "../pages/JobMatching"
+import JobDetails from "../pages/JobDetails"
+
 
 function AppRoutes() {
   return (
@@ -32,7 +35,17 @@ function AppRoutes() {
 
       <Route
         path="/interview/:candidateId"
-        element={<Interview />}
+        element={<Interview />} 
+      />
+      
+      <Route
+        path="/jobs"
+        element={<JobMatching />}
+      />
+
+      <Route
+        path="/jobs/:id"
+        element={<JobDetails />}
       />
 
     </Routes>
