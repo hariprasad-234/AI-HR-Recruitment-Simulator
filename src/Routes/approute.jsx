@@ -8,6 +8,8 @@ import Interview from "../pages/Interview"
 import JobMatching from "../pages/JobMatching"
 import JobDetails from "../pages/JobDetails"
 import Ranking from "../pages/Ranking"
+import CandidateDashboard from "../pages/CandidateDashboard"
+import CandidateProfile from "../pages/CandidateProfile"
 
 function AppRoutes() {
   return (
@@ -52,6 +54,17 @@ function AppRoutes() {
         path="/jobs/:id"
         element={<JobDetails />}
       />
+
+      <Route
+        path="/candidate-dashboard"
+        element={<CandidateDashboard />}
+      />
+
+      <Route
+        path="/candidate-profile"
+        element={<CandidateProfile />}
+      />
+
 
     </Routes>
   )
