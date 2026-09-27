@@ -7,12 +7,17 @@ import HRCopilot from "../pages/HRCopilot"
 import Interview from "../pages/Interview"
 import JobMatching from "../pages/JobMatching"
 import JobDetails from "../pages/JobDetails"
-
+import Ranking from "../pages/Ranking"
 
 function AppRoutes() {
   return (
     <Routes>
-
+      
+      <Route
+        path="/recruiter-dashboard"
+        element={<Ranking />}
+      />
+      
       <Route
         path="/login"
         element={<Login />}
