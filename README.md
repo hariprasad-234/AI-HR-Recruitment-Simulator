@@ -95,6 +95,19 @@ This feature helps recruiters quickly explore candidate matches and shortlist su
 - Candidate analytics dashboard 📈
 - Enhanced recruiter insights and reporting 📊
 
+## Task 10 API integration
+
+The settings and notification screens use the API base URL from `VITE_API_BASE_URL` (defaults to `http://localhost:8000`) and send a bearer token from `localStorage` under `token` when present. The backend must provide:
+
+- `GET /api/notifications` returning an array or `{ "notifications": [] }` with `id`, `title` or `message`, optional `created_at`, and `read` or `is_read`.
+- `PATCH /api/notifications/{id}/read` to mark a notification read.
+- `GET /api/settings` returning notification preferences.
+- `PATCH /api/settings/notifications` accepting `{ "email": boolean, "in_app": boolean, "interview_updates": boolean }`.
+- `POST /api/auth/change-password` accepting `{ "current_password": string, "new_password": string }`.
+- `POST /api/copilot/query` accepting the query, filters, and history described in `src/Services/copilotService.js`.
+
+Add `VITE_API_BASE_URL=https://your-api-host` to the local `.env` file. Copilot uses the API by default; set `VITE_USE_MOCK=true` only to opt into its local sample data. These endpoints are an integration contract for the backend; the repository does not include a backend server, so live API behavior must be verified against the deployed service.
+
 ## 🤝 Team Contribution
 
 This project is built as a collaborative effort across frontend, backend, and AI modules to create a complete digital hiring ecosystem.

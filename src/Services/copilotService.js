@@ -9,10 +9,10 @@
 //   response: { reply: string,
 //               candidates: [{ id, name, score, skills: string[], location, experience_years, summary }] }
 //
-// Set VITE_USE_MOCK=false in .env once the backend endpoint is live (Task 10 integration).
+// Set VITE_USE_MOCK=true in .env only when a local demo needs sample candidates.
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
-const USE_MOCK = import.meta.env.VITE_USE_MOCK !== "false"; // mock by default
+const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true"; // opt-in mock mode
 
 // ---------- Mock data (remove when backend is connected) ----------
 const MOCK_CANDIDATES = [

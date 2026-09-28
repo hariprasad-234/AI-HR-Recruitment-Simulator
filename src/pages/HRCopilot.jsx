@@ -14,7 +14,7 @@ export default function HRCopilot() {
   const handleViewCandidate = (candidate) => navigate(`/recruiter-dashboard?candidate=${candidate.id}`);
 
   return (
-    <div className="mx-auto flex h-[calc(100dvh-var(--navbar-height,0px))] min-h-[520px] w-full max-w-4xl flex-col overflow-hidden bg-white sm:border-x sm:border-slate-200">
+    <div className="mx-auto flex h-[calc(100dvh-7rem)] min-h-[520px] w-full max-w-4xl flex-col overflow-hidden bg-white sm:border-x sm:border-slate-200">
       <header className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
         <div>
           <h1 className="text-lg font-semibold text-slate-900">HR Copilot</h1>
