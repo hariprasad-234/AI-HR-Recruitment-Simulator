@@ -1,7 +1,7 @@
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "http://localhost:8000").replace(/\/$/, "")
 
 export async function apiRequest(path, { method = "GET", body, signal } = {}) {
-  const token = localStorage.getItem("token")
+  const token = localStorage.getItem("token") || sessionStorage.getItem("token")
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method,
     headers: {

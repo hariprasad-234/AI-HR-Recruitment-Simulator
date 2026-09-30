@@ -1,20 +1,22 @@
-export async function loginUser(email, password) {
-  console.log("Login request:", {
-    email,
-    password,
+import { apiRequest } from "./apiClient"
+
+export function loginUser(email, password) {
+  return apiRequest("/api/auth/login", {
+    method: "POST",
+    body: { email, password },
   })
-
-  return null
 }
 
-export async function signupUser(userData) {
-  console.log("Signup request:", userData)
-
-  return null
+export function signupUser(userData) {
+  return apiRequest("/api/auth/register", {
+    method: "POST",
+    body: userData,
+  })
 }
 
-export async function forgotPassword(email) {
-  console.log("Forgot password request:", email)
-
-  return null
+export function forgotPassword(email) {
+  return apiRequest("/api/auth/forgot-password", {
+    method: "POST",
+    body: { email },
+  })
 }

@@ -1,52 +1,50 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { loginUser } from "../Services/authServices"
 import { useAuth } from "../Hooks/useAuth"
 
 function Login() {
   const { login } = useAuth()
+  const navigate = useNavigate()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [rememberMe, setRememberMe] = useState(false)
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
 
-  const handleSubmit = async (e) => {
-  e.preventDefault()
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    setError("")
 
-  setError("")
-
-  if (!email || !password) {
-    setError("Please enter your email and password")
-    return
-  }
-
-  if (!email.includes("@")) {
-    setError("Please enter a valid email address")
-    return
-  }
-
-  try {
-    setLoading(true)
-
-    const result = await loginUser(email, password)
-
-    console.log("Login response:", result)
-
-    // Backend will return the real response later.
-    // For now, show an error because no backend is connected.
-    if (!result) {
-      setError("Invalid email or password")
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError("Please enter a valid email address.")
       return
     }
-    login(result.user, rememberMe)
+    if (!password) {
+      setError("Please enter your password.")
+      return
+    }
 
-  } catch (error) {
-    setError("Unable to login. Please try again.")
-  } finally {
-    setLoading(false)
+    try {
+      setLoading(true)
+      const result = await loginUser(email.trim(), password)
+      const token = result?.access_token || result?.token || result?.data?.access_token || result?.data?.token
+      const user = result?.user || result?.data?.user
+
+      if (!token || !user) {
+        setError("The login response was incomplete. Please try again.")
+        return
+      }
+
+      login(user, token, rememberMe)
+      const role = (user.role || user.user_type || "").toLowerCase()
+      navigate(role === "candidate" ? "/candidate-dashboard" : role === "recruiter" ? "/recruiter-dashboard" : "/hr-copilot", { replace: true })
+    } catch (requestError) {
+      setError(requestError.message || "Invalid email or password.")
+    } finally {
+      setLoading(false)
+    }
   }
-}
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -62,7 +60,7 @@ function Login() {
 
         {/* ERROR MESSAGE */}
         {error && (
-          <div className="mt-6 rounded-lg bg-red-50 p-3 text-sm text-red-600">
+          <div role="alert" className="mt-6 rounded-lg bg-red-50 p-3 text-sm text-red-600">
             {error}
           </div>
         )}
@@ -76,6 +74,8 @@ function Login() {
 
           <input
             type="email"
+            autoComplete="email"
+            required
             placeholder="Enter your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -89,6 +89,8 @@ function Login() {
 
           <input
             type="password"
+            autoComplete="current-password"
+            required
             placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -135,7 +137,7 @@ function Login() {
         <p className="mt-6 text-center text-sm text-gray-600">
           Don't have an account?{" "}
           <Link
-            to="/register"
+            to="/signup"
             className="font-medium text-blue-600 hover:text-blue-700"
           >
             Sign Up

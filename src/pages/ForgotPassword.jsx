@@ -1,18 +1,31 @@
 import { useState } from "react"
+import { Link } from "react-router-dom"
+import { forgotPassword } from "../Services/authServices"
 
 function ForgotPassword() {
   const [email, setEmail] = useState("")
   const [sent, setSent] = useState(false)
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    setError("")
 
-    if (!email) {
-      alert("Please enter your email")
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError("Please enter a valid email address.")
       return
     }
 
-    setSent(true)
+    try {
+      setLoading(true)
+      await forgotPassword(email.trim())
+      setSent(true)
+    } catch (requestError) {
+      setError(requestError.message || "Unable to send a reset link. Please try again.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -38,17 +51,22 @@ function ForgotPassword() {
 
               <input
                 type="email"
+                autoComplete="email"
+                required
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
               />
 
+              {error && <p role="alert" className="mt-3 text-sm text-red-600">{error}</p>}
+
               <button
                 type="submit"
+                disabled={loading}
                 className="mt-6 w-full rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700"
               >
-                Send Reset Link
+                {loading ? "Sending..." : "Send Reset Link"}
               </button>
 
             </form>
@@ -64,6 +82,10 @@ function ForgotPassword() {
               If an account exists for {email}, a password reset link
               has been sent.
             </p>
+
+            <Link to="/login" className="mt-6 inline-block font-medium text-blue-600 hover:text-blue-700">
+              Return to login
+            </Link>
 
           </div>
         )}

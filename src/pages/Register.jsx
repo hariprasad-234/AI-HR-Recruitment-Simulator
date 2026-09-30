@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
+import { signupUser } from "../Services/authServices"
 
 function Register() {
   const [name, setName] = useState("")
@@ -7,59 +8,42 @@ function Register() {
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [role, setRole] = useState("")
-  const [error,seterror]=useState("")
+  const [error, setError] = useState("")
+  const [success, setSuccess] = useState("")
+  const [loading, setLoading] = useState(false)
   const isValidEmail = (email) => {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-}
-{error && (
-  <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-600">
-    {error}
-  </div>
-)}
-const getPasswordStrength = (password) => {
-
-  if (password.length < 6) {
-    return "weak"
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
   }
 
-  if (
-    password.length >= 8 &&
-    /[A-Z]/.test(password) &&
-    /[0-9]/.test(password)
-  ) {
-    return "strong"
+  const getPasswordStrength = (value) => {
+    const criteria = [value.length >= 8, /[A-Z]/.test(value), /[a-z]/.test(value), /[0-9]/.test(value), /[^A-Za-z0-9]/.test(value)]
+    const score = criteria.filter(Boolean).length
+    return score >= 4 ? "strong" : score >= 2 ? "medium" : "weak"
   }
 
-  return "medium"
-}
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    setError("")
+    setSuccess("")
 
+    if (!name.trim()) return setError("Please enter your full name.")
+    if (!isValidEmail(email)) return setError("Please enter a valid email address.")
+    if (password.length < 8 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password)) {
+      return setError("Use at least 8 characters with uppercase, lowercase, and a number.")
+    }
+    if (password !== confirmPassword) return setError("Passwords do not match.")
+    if (!role) return setError("Please select Candidate or Recruiter.")
 
-  const handleSubmit = (e) => {
-  e.preventDefault()
-
-  if (!name || !email || !password) {
-    alert("Please fill all fields")
-    return
+    try {
+      setLoading(true)
+      await signupUser({ name: name.trim(), email: email.trim(), password, role })
+      setSuccess("Your account has been created. You can now log in.")
+    } catch (requestError) {
+      setError(requestError.message || "Unable to create your account. Please try again.")
+    } finally {
+      setLoading(false)
+    }
   }
-
-  if (password.length < 6) {
-    alert("Password must be at least 6 characters")
-    return
-  }
-  if(password!=confirmPassword){
-    alert("Password does not match");
-    return
-  }
-  if (!role) {
-  alert("Please select a role")
-  return
-  
-}
-  console.log("Name:", name)
-  console.log("Email:", email)
-  console.log("Password:", password)
-  console.log("Role:",role);
-}
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
 
@@ -72,10 +56,9 @@ const getPasswordStrength = (password) => {
         <p className="text-gray-700 text-center mt-4">
           Join AI HR Recruitment
         </p>
-        <p>
-          <br>
-          </br>
-        </p>
+        {error && <div role="alert" className="mt-6 rounded-lg bg-red-50 p-3 text-sm text-red-600">{error}</div>}
+        {success && <div role="status" className="mt-6 rounded-lg bg-green-50 p-3 text-sm text-green-700">{success}</div>}
+
         <form onSubmit={handleSubmit} className="mt-6">
 
   <div>
@@ -85,15 +68,13 @@ const getPasswordStrength = (password) => {
 
     <input
   type="text"
+  autoComplete="name"
+  required
   placeholder="Enter your full name"
   value={name}
   onChange={(e) => setName(e.target.value)}
   className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3"
-/>
-<p>
-          <br>
-          </br>
-        </p>
+    />
   </div>
   <div className="mt-4">
 
@@ -104,16 +85,14 @@ const getPasswordStrength = (password) => {
 
   <input
   type="email"
+  autoComplete="email"
+  required
   placeholder="Enter your email"
   value={email}
   onChange={(e) => setEmail(e.target.value)}
   className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
 
-/>
-<p>
-          <br>
-          </br>
-        </p>
+    />
 
 </div>
 <div className="mt-4">
@@ -124,6 +103,9 @@ const getPasswordStrength = (password) => {
 
   <input
   type="password"
+  autoComplete="new-password"
+  minLength={8}
+  required
   placeholder="Create a password"
   value={password}
   onChange={(e) => setPassword(e.target.value)}
@@ -139,10 +121,6 @@ const getPasswordStrength = (password) => {
     </span>
   </p>
 )}
-<p>
-          <br>
-          </br>
-        </p>
 <div className="mt-4">
 
   <label className="block text-sm font-medium text-gray-700">
@@ -151,16 +129,15 @@ const getPasswordStrength = (password) => {
 
   <input
     type="password"
+    autoComplete="new-password"
+    minLength={8}
+    required
     placeholder="Confirm your password"
     value={confirmPassword}
     onChange={(e) => setConfirmPassword(e.target.value)}
     className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
 
   />
-  <p>
-          <br>
-          </br>
-        </p>
 
 </div>
 
@@ -174,6 +151,7 @@ const getPasswordStrength = (password) => {
   type="radio"
   name="role"
   value="candidate"
+  required
   checked={role === "candidate"}
   onChange={(e) => setRole(e.target.value)}
 />
@@ -196,9 +174,10 @@ const getPasswordStrength = (password) => {
 </div>
 <button
   type="submit"
+  disabled={loading || Boolean(success)}
   className="mt-6 w-full rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700"
 >
-  Create Account
+  {loading ? "Creating account..." : "Create Account"}
 </button>
 <p className="mt-6 text-center text-sm text-gray-600">
   Already have an account?{" "}
