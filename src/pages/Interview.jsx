@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react"
 import { useParams } from "react-router-dom"
+import VoiceRecorder from "../components/VoiceRecorder"
 
 const DUMMY_QUESTIONS = [
   "Tell me about yourself and your experience.",
@@ -19,22 +20,23 @@ function Interview() {
   const [timeLeft, setTimeLeft] = useState(60)
   const [isComplete, setIsComplete] = useState(false)
 
+  // VOICE AI STATE
+  const [liveTranscript, setLiveTranscript] = useState("")
+  const [isTranscribing, setIsTranscribing] = useState(false)
+  const [micErrorMsg, setMicErrorMsg] = useState(null)
+
   const chatEndRef = useRef(null)
 
-  // AUTO SCROLL TO LATEST MESSAGE
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages])
 
-  // COUNTDOWN TIMER PER QUESTION
   useEffect(() => {
     if (isComplete) return
-
     if (timeLeft === 0) {
       handleSend()
       return
     }
-
     const timer = setTimeout(() => setTimeLeft((t) => t - 1), 1000)
     return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -58,9 +60,37 @@ function Interview() {
 
     setMessages(newMessages)
     setAnswer("")
+    setLiveTranscript("")
   }
 
-  // INTERVIEW COMPLETE SCREEN
+  // VOICE AI HANDLERS
+  const handleAudioChunk = (blob) => {
+    console.log("audio chunk ready to stream", blob)
+    // TODO: stream to backend Whisper endpoint once ready
+  }
+
+  const handleRecordingComplete = async (blob) => {
+    setIsTranscribing(true)
+    try {
+      // TODO: replace with real API call once backend is ready
+      // const formData = new FormData()
+      // formData.append("audio", blob, "answer.webm")
+      // const res = await fetch(`/api/interview/${candidateId}/answer`, {
+      //   method: "POST",
+      //   body: formData,
+      // })
+      // const { transcript } = await res.json()
+
+      await new Promise((r) => setTimeout(r, 800))
+      const transcript = "This is a placeholder transcript standing in for the real Whisper response."
+
+      setLiveTranscript(transcript)
+      setAnswer(transcript) // fills the text box so candidate can review/edit before sending
+    } finally {
+      setIsTranscribing(false)
+    }
+  }
+
   if (isComplete) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -78,7 +108,7 @@ function Interview() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-2xl rounded-xl bg-white shadow-lg flex flex-col h-[80vh]">
+      <div className="w-full max-w-2xl rounded-xl bg-white shadow-lg flex flex-col h-[85vh]">
 
         {/* HEADER */}
         <div className="flex items-center justify-between border-b border-gray-200 p-4">
@@ -107,11 +137,27 @@ function Interview() {
           <div ref={chatEndRef} />
         </div>
 
-        {/* INPUT AREA */}
+        {/* VOICE RECORDER */}
+        <div className="border-t border-gray-200 px-4 pt-3">
+          <VoiceRecorder
+            ttsAudioUrl={null}
+            transcript={liveTranscript}
+            isTranscribing={isTranscribing}
+            onAudioChunk={handleAudioChunk}
+            onRecordingComplete={handleRecordingComplete}
+            onMicError={(msg) => setMicErrorMsg(msg)}
+            maxDurationMs={60000}
+          />
+          {micErrorMsg && (
+            <p className="text-center text-xs text-rose-500 mt-1">{micErrorMsg}</p>
+          )}
+        </div>
+
+        {/* TEXT INPUT AREA */}
         <div className="flex items-center gap-2 border-t border-gray-200 p-4">
           <input
             type="text"
-            placeholder="Type your answer..."
+            placeholder="Type your answer or use the mic above..."
             value={answer}
             onChange={(e) => setAnswer(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSend()}

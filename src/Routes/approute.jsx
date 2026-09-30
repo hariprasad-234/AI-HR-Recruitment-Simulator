@@ -13,6 +13,7 @@ import CandidateDashboard from "../pages/CandidateDashboard"
 import CandidateProfile from "../pages/CandidateProfile"
 import Settings from "../pages/Settings"
 import AppShell from "../AppShell"
+import UploadResume from "../pages/UploadResume"
 
 function ProtectedRoute() {
   const { isAuthenticated } = useAuth()
@@ -53,6 +54,7 @@ function AppRoutes() {
           <Route path="/jobs/:id" element={<JobDetails />} />
           <Route path="/candidate-dashboard" element={<CandidateDashboard />} />
           <Route path="/candidate-profile" element={<CandidateProfile />} />
+          <Route path="/upload-resume" element={<UploadResume />} />
         </Route>
       </Route>
     </Routes>
