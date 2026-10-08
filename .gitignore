@@ -23,26 +23,22 @@ dist-ssr
 *.sln
 *.sw?
 
-
 # Python / AI
 __pycache__/
 *.py[cod]
 .pytest_cache/
-
-# AI virtual environment
 ai/venv/
 venv/
+ai/chroma_db/
+ai/voice/*.m4a
+ai/voice/*.wav
+ai/**/__pycache__/
 
 # Environment variables / API keys
 .env
 ai/.env
 
-# ChromaDB local database
-ai/chroma_db/
-
-# Audio files
-ai/voice/*.m4a
-ai/voice/*.wav
-
-# Python cache
-ai/**/__pycache__/
+# Backend runtime files
+server/data/*.json
+server/uploads/*
+!server/uploads/.gitkeep

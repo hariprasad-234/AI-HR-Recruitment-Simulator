@@ -99,7 +99,7 @@ function CandidateProfile() {
       setResumeFile(null);
 
       setMessage(
-        "Profile updated in this demo. Changes are not yet saved to a backend."
+        "Profile updated successfully."
       );
     } catch (err) {
       setError("Unable to update profile.");
@@ -146,6 +146,10 @@ function CandidateProfile() {
           <p className="mt-2 text-secondary-500">
             Manage your personal information, skills, and resume.
           </p>
+
+          <Link to="/upload-resume" className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-700">
+            <Upload size={16} /> Upload / Parse Resume
+          </Link>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3">
