@@ -18,9 +18,7 @@ import Badge from "../components/Badge";
 import Card from "../components/Card";
 import MatchScore from "../components/MatchScore";
 
-import {
-  getJobById,
-} from "../Services/jobsService";
+import { getJobById, applyForJob } from "../Services/jobsService";
 
 
 function JobDetails() {
@@ -136,19 +134,13 @@ function JobDetails() {
     APPLY BUTTON
   */
 
-  const handleApply = () => {
-
-    /*
-      TEMPORARY
-
-      Replace this with the actual
-      application API later.
-    */
-
-    window.alert(
-      `Application started for ${job.title} at ${job.company}.`
-    );
-
+  const handleApply = async () => {
+    try {
+      await applyForJob(job.id);
+      window.alert(`Application submitted for ${job.title} at ${job.company}.`);
+    } catch (error) {
+      window.alert(error.message || "Unable to submit application.");
+    }
   };
 
 

@@ -1,4 +1,5 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { apiRequest } from "../Services/apiClient"
 
 const DUMMY_CANDIDATES = [
   { id: 1, name: "Aarav Sharma", role: "Frontend Developer", score: 92, technical: 90, communication: 88, confidence: 95, skills: ["React", "Tailwind", "JavaScript"], experience: 3 },
@@ -9,7 +10,11 @@ const DUMMY_CANDIDATES = [
 ]
 
 function Ranking() {
-  const [candidates] = useState(DUMMY_CANDIDATES)
+  const [candidates, setCandidates] = useState([])
+
+  useEffect(() => {
+    apiRequest("/api/candidates").then(setCandidates).catch(() => setCandidates(DUMMY_CANDIDATES))
+  }, [])
   const [skillFilter, setSkillFilter] = useState("")
   const [minExperience, setMinExperience] = useState("")
   const [minScore, setMinScore] = useState("")

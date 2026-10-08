@@ -8,6 +8,7 @@ import {
   X,
 } from "lucide-react";
 import { useResumeUpload } from "../Hooks/useResumeUpload";
+import { uploadResume } from "../Services/resumeService";
 
 /**
  * UploadResume — /upload-resume
@@ -44,7 +45,7 @@ export default function UploadResume({ onUpload, onConfirm }) {
   const [isDragging, setIsDragging] = useState(false);
 
   const { status, progress, error, fileName, parsedData, upload, reset } =
-    useResumeUpload(onUpload ? { onUpload } : undefined);
+    useResumeUpload(onUpload ? { onUpload } : { onUpload: uploadResume });
 
   const handleFiles = (fileList) => {
     const file = fileList?.[0];

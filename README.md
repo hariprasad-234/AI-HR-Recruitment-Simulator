@@ -14,23 +14,24 @@ AI HR Recruitment Simulator brings together resume analysis, candidate evaluatio
 - HR Copilot assistant for natural-language queries 💬
 - Candidate filtering by skills, score, and location 🧠
 - Modern and responsive user interface for HR teams 🖥️
-- Scalable frontend architecture for future backend integration 🔧
+- Integrated Node.js REST API for authentication, jobs, applications, resume uploads, notifications, and interviews 🔧
 
 ## 🏗️ Tech Stack
 
 - React.js ⚛️
 - Vite ⚡
 - React Router DOM 🧭
+- Node.js REST API 💚
 - JavaScript / JSX 💻
 - CSS styling 🎨
-- API-ready frontend structure 🔌
+- JSON-file persistence for local development 🔌
 
 ## 🚀 Project Goals
 
 - Reduce manual screening time ⏱️
 - Improve recruitment accuracy with AI-assisted evaluation 🧠
 - Build a recruiter-friendly user experience 👩‍💼
-- Create a scalable project for future AI and backend integration 🤝
+- Provide a working local backend for recruitment workflows 🤝
 
 ## 🧩 Core Modules
 
@@ -54,6 +55,9 @@ src/
 ├── context/
 ├── data/
 └── assets/
+server/
+├── index.js
+└── README.md
 ```
 
 ## 🛠️ Getting Started
@@ -64,7 +68,13 @@ src/
 npm install
 ```
 
-### Run the project locally
+### Run the backend
+
+```bash
+npm run server
+```
+
+The API runs at `http://localhost:8000`. In a second terminal, start the frontend:
 
 ```bash
 npm run dev
@@ -72,9 +82,11 @@ npm run dev
 
 Then open:
 
-```bash
+```text
 http://localhost:5173
 ```
+
+The backend uses a local JSON database in `server/data/`; this runtime data is ignored by Git. Demo accounts for local development are documented in [server/README.md](./server/README.md). Set a private `JWT_SECRET` environment variable before using the server outside local development.
 
 ## 🤖 HR Copilot Feature
 
@@ -89,7 +101,7 @@ This feature helps recruiters quickly explore candidate matches and shortlist su
 
 ## 📌 Future Enhancements
 
-- Real AI backend integration 🤖
+- Integration with a production AI model for resume analysis and copiloting 🤖
 - Resume parsing using NLP and ML 🧠
 - Interview scheduling automation 📅
 - Candidate analytics dashboard 📈
@@ -106,7 +118,7 @@ The settings and notification screens use the API base URL from `VITE_API_BASE_U
 - `POST /api/auth/change-password` accepting `{ "current_password": string, "new_password": string }`.
 - `POST /api/copilot/query` accepting the query, filters, and history described in `src/Services/copilotService.js`.
 
-Add `VITE_API_BASE_URL=https://your-api-host` to the local `.env` file. Copilot uses the API by default; set `VITE_USE_MOCK=true` only to opt into its local sample data. These endpoints are an integration contract for the backend; the repository does not include a backend server, so live API behavior must be verified against the deployed service.
+Copy `.env.example` to `.env` for local configuration. Set `VITE_API_BASE_URL` to the backend URL when it is not running at `http://localhost:8000`. Copilot uses the API by default; set `VITE_USE_MOCK=true` only to opt into its local sample data. The included local backend implements the application API; live API behavior should also be verified against the deployed service.
 
 ## 🤝 Team Contribution
 
